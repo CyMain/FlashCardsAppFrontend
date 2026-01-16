@@ -100,19 +100,50 @@ function App() {
 const MainApp = (
   {username}
 ) =>{
+  const [view, setView] = useState("folder");
+  const currFolder = {};
+  const currDeck = {};
+  const currCard = {};
 
   return(
     <>
-      <div className="screen-fill main-screen">
-        <h1 className='screen-title'>Greetings, {username}!</h1>
-        <div className="container">
-          <div className="buttons-group">
-            <button>View Cards</button>
-            <button>Quiz Me!</button>
+      {
+        view === "main" ?
+        (
+          <div className="screen-fill main-screen">
+            <h1 className='screen-title'>Greetings, {username}!</h1>
+            <div className="container">
+              <div className="buttons-group">
+                <button>View Cards</button>
+                <button>Quiz Me!</button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
+        ) : (
+          view === "folder" ?
+          (
+            <div className="screen-fill sub-screen">
+              <h1 className='sub-screen-title'>Greetings, {username}!</h1>
+              <div className="sub-screen-container">
+                <div className="nav-group">
+                  <div className="dir-tracking">
+                    Folder &gt; Deck &gt; Card &gt;
+                  </div>
+                  <div className="action-btns">
+                    <button type="button">Quiz Me!</button>
+                    <button type="button">Rename</button>
+                    <button type="button">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+          :
+          (
+            ""
+          )
+        )
+      }
     </>
   )
 }

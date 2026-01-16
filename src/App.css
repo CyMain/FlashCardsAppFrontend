@@ -53,6 +53,10 @@ label{
   justify-content: center;
 }
 
+.sub-screen{
+  justify-content: center;
+}
+
 /* GROUPING STYLINGS */
 .container{
   border: none;
@@ -73,6 +77,27 @@ label{
   }
 }
 
+.sub-screen-container{
+  border: none;
+  box-shadow: 0 0 10px 4px #00000099;
+  background-color: #f5ffff;
+  border-radius: 0.8rem;
+  padding: 1.2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: clamp(25rem,45vw, 100rem);
+  height: clamp(25rem, 75dvh, 150rem);
+  min-width: 45vw;
+  min-height: 25rem;
+  >*{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
 .buttons-group{
   display: flex;
   flex-direction: column;
@@ -84,4 +109,35 @@ label{
   position: fixed;
   top: 15dvh;
   text-align: center;
+}
+
+.sub-screen-title{
+  position: fixed;
+  top: 5dvh;
+  text-align: center;
+}
+
+.nav-group{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100% ;
+  gap: 0.2rem;
+  >.dir-tracking{
+
+  }
+  >.action-btns{
+    display: flex;
+    gap: 0.2rem;
+    >button{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      text-align: center;
+      aspect-ratio: 2/1;
+      height: 2.5rem;
+    }
+  }
 }
