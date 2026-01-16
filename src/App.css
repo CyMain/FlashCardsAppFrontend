@@ -18,6 +18,8 @@ button{
   border: none;
   border-radius: 0.4rem;
   padding: 0.6rem;
+  min-width: max-content;
+
   &:hover{
     background: #0008729d;
   }
@@ -122,6 +124,7 @@ label{
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  padding: 0 0.6rem;
   width: 100% ;
   gap: 0.2rem;
   >.dir-tracking{
@@ -136,8 +139,45 @@ label{
       justify-content: center;
       font-weight: bold;
       text-align: center;
-      aspect-ratio: 2/1;
       height: 2.5rem;
+    }
+  }
+}
+
+.folders-list{
+  max-height: 100%;
+  padding: 0.2rem 0 ;
+  height: max-content;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  >.folder{
+    border: 1px solid;
+    border-radius: 0.8rem;
+    padding: 0.2rem 0.4rem;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 3.6rem;
+    >*{
+      display: flex;
+      align-items: center;
+    }
+    >.folder-name{
+      flex: 6;
+      text-align: left;
+    }
+    >.folder-actions{
+      flex:1;
+      gap: 0.4rem;
+      justify-content: center;
+      >*{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+      }
     }
   }
 }

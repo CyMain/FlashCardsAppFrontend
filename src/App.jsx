@@ -135,6 +135,24 @@ const MainApp = (
                     <button type="button">+</button>
                   </div>
                 </div>
+                <ul className="folders-list">
+                  <li className="folder">
+                    <div className="folder-name">Folder1</div>
+                    <div className="folder-actions">
+                      <button type="button">Quiz Me!</button>
+                      <button type="button">Delete</button>
+                      <button type="button">Rename</button>
+                    </div>
+                  </li>
+                  <li className="folder">
+                    <div className="folder-name">Folder1</div>
+                    <div className="folder-actions">
+                      <button type="button">Quiz Me!</button>
+                      <button type="button">Delete</button>
+                      <button type="button">Rename</button>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
           )
