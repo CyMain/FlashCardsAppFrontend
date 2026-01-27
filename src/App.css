@@ -19,8 +19,10 @@ button{
   border-radius: 0.4rem;
   padding: 0.6rem;
   min-width: max-content;
-
+  color: white;
+  transition: scale 0.1s, background 0.1s;
   &:hover{
+    scale: 1.05;
     background: #0913a0;
   }
 }
@@ -240,23 +242,47 @@ label{
   height: 100%;
   width: 100%;
   justify-content: center;
+  align-items: center;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  >figure{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    >svg{
+      align-self: center;
+      width: 20%;
+      height: auto;
+    }
+  }
+
   >label{
     display: flex;
+    text-align: center;
     font-size: 1.2rem;
     gap: 2rem;
     flex-direction: column;
   }
-}
-.num-rounds-input{
-  border: none;
-  border-radius: 1rem;
-  font-size: 1.4rem;
-  width: 6rem;
-  padding: 0.4rem;
-  &:focus{
-    outline: none;
+  >input{
+    text-align: center;
+    border: none;
+    border-radius: 1rem;
+    font-size: 110%;
+    width: 50%;
+    padding: 0.4rem;
+    &:focus{
+      outline: 1px solid orange;
+    }
+  }
+  >button{
+    align-self: center;
+  }
+  >.answer-btn{
+    width: 40%;
+  }
+  >.start-quiz-btn{
+    width: 60%;
   }
 }
