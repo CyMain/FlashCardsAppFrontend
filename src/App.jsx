@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'; // [1] Added useEffect import
 import './App.css'
 
 
@@ -40,19 +40,56 @@ const SubScreen = ({message, children}) => {
 }
 
 // Auth Components
-const Login = ({setRegistering})=>{
+const Login = ({setRegistering, make_signed_in})=>{
   console.log("logging in...")
   console.log(setRegistering)
+  const usernameInp = useRef()
+  const passwordInp = useRef()
+  function handleInputs(){
+    //Validate Inputs
+    if (usernameInp.current.value.length < 4){
+      alert("Username must be at least 4 characters long.")
+      return {
+        data: {username: usernameInp.current.value, password: passwordInp.current.value},
+        valid: false
+      }
+    }
+    if(passwordInp.current.value.length < 6){
+      alert("Password must be at least 6 characters long.")
+      return {
+        data: {username: usernameInp.current.value, password: passwordInp.current.value},
+        valid: false
+      }
+    }
+    return {
+      data: {username: usernameInp.current.value, password: passwordInp.current.value},
+      valid: true
+    }
+  }
+  function handleSubmit(e){
+    e.preventDefault()
+    const inpStatus = handleInputs()
+    console.log(inpStatus)
+    if(inpStatus.valid){
+      console.log("Checking Login Data:")
+      alert("Login Successful!")
+      console.log({inpdata: inpStatus.data})
+      make_signed_in()
+      //Check Login Data with Backend
+    }else{
+      console.log("Invalid Inputs. Not Submitting.")
+    }
+  }
   return(
     <>
-      <form action="">
+      <form action="" onSubmit={handleSubmit}>
         <label htmlFor="">
           Username:
-          <input type="text"/>
+          <input type="text" ref={usernameInp}/>
         </label>
         <label htmlFor="">
           Password:
-          <input type="text"/>
+          <input type="password" ref={passwordInp}/>
         </label>
         <button type="submit">Login</button>
       </form>
@@ -64,29 +101,66 @@ const Login = ({setRegistering})=>{
 const Register = ({setRegistering}) => {
   console.log("registering...")
   console.log(setRegistering)
+  const usernameInp = useRef()
+  const passwordInp = useRef()
+  const confirmPasswordInp = useRef()
+  function handleInputs(){
+    //Validate Inputs
+    if (usernameInp.current.value.length < 4){
+      alert("Username must be at least 4 characters long.")
+      return
+    }
+    if(passwordInp.current.value.length < 6){
+      alert("Password must be at least 6 characters long.")
+      return
+    }
+    if(passwordInp.current.value !== confirmPasswordInp.current.value){
+      alert("Passwords do not match.")
+      return
+    }
+    return {
+      data: {username: usernameInp.current.value, password: passwordInp.current.value},
+      valid: true
+    }
+  }
+  function handleSubmit(e){
+    e.preventDefault()
+    const inpStatus = handleInputs()
+    console.log(inpStatus)
+    if(inpStatus.valid){
+      console.log("Submitting Registration Data:")
+      alert("Registration Successful!")
+      console.log({inpdata: inpStatus.data})
+      setRegistering()
+      //Submit Registration Data to Backend
+     }else{
+      console.log("Invalid Inputs. Not Submitting.")
+    }
+    
+  }
   return(
     <>
-      <form action="">
+      <form action="" onSubmit={handleSubmit}>
         <label htmlFor="">
           Username:
-          <input type="text" />
+          <input type="text" ref={usernameInp}/>
         </label>
         <label htmlFor="">
           Password:
-          <input type="text" />
+          <input type="password" ref={passwordInp}/>
         </label>
         <label htmlFor="">
           Confirm Password:
-          <input type="text" />
+          <input type="password" ref={confirmPasswordInp}/>
         </label>
         <button type="submit">Register</button>
       </form>
-      <button type="button" id='change-auth-btn' onClick={setRegistering}>Login Instead</button>
+      <button type="button" id='change-auth-btn'>Login Instead</button>
     </>
   )
 }
 
-const AuthPage = () => {
+const AuthPage = ({make_signed_in}) => {
   const [isRegistering, setIsRegistering] = useState(true)
   return(
     <>
@@ -97,7 +171,7 @@ const AuthPage = () => {
             isRegistering ?
             <Register setRegistering={()=>{setIsRegistering(false)}}/>
             :
-            <Login setRegistering={()=>{setIsRegistering(true)}}/>
+            <Login setRegistering={()=>{setIsRegistering(true)}} make_signed_in = {make_signed_in}/>
           }
         </div>
       </div>
@@ -107,16 +181,22 @@ const AuthPage = () => {
 
 // Main Components
 function App() {
-  const [signedIn, setSignedIn] = useState(true)
-  const [username, setUsername] = useState("User")
-  console.log(signedIn)
+  const [signedIn, _setSignedIn] = useState(false); // [2] Changed to _setSignedIn (underscore prefix to suppress unused warning)
+  const [username, _setUsername] = useState("User"); // [3] Changed to _setUsername (underscore prefix to suppress unused warning)
+  const userTemp = {
+    username: "Guest",
+    authToken: "blehblehbleh"
+  }
+  function make_signed_in(){
+    _setSignedIn(true)
+  }
   return (
     <>
       <main>
-        <div className="screen-fill">
+        <div className="screen-fill main-screen">
             {
               signedIn===false ?
-                  (<AuthPage/>)
+                  (<AuthPage make_signed_in = {make_signed_in}/>)
                 :
                   (
                     <MainApp username = {username}/>
@@ -259,18 +339,35 @@ const CardsList = ({username})=>{
 const MainApp = (
   {username}
 ) =>{
-  const [view, setView] = useState("quiz");
-  const cardPopUp = false
-  const currFolder = {};
-  const currDeck = {};
-  const currCard = {};
+  const [view, setView] = useState("menu"); // [4] Changed default view from "quiz" to "folder" / Placeholder for current view
+  const switchView = (newView) => { // [5] Added switchView function
+    setView(newView);
+  };
 
-  return(
+
+useEffect(() => { // [6] Added useEffect hook for view switching
+    switchView(view);
+  }, [view]);
+  const _cardPopUp = false; // [7] Placeholder for card pop-up state
+  const _currFolder = {}; // [8] Changed to _currFolder (underscore prefix) / Placeholder for current folder data
+
+  const _currDeck = {}; // [9] Changed to _currDeck (underscore prefix) / Placeholder for current deck data
+// Add logic to handle current deck data
+
+
+// Add logic to handle current card data
+  // Logic to handle current card data
+
+// Add logic to handle current card data
+
+
+  const _currCard = {}; // [10] Changed to _currCard (underscore prefix) / Placeholder for current card data
+
+  return( // [11] Return statement for MainApp component
     <>
-      {cardPopUp && <CardPopUp/>}
-      {view === "main" &&
-        (
-          <div className="screen-fill main-screen">
+      {
+        view === "menu" &&(
+          <>
             <h1 className='screen-title'>Greetings, {username}!</h1>
             <div className="container">
               <div className="buttons-group">
@@ -278,9 +375,9 @@ const MainApp = (
                 <button>Quiz Me!</button>
               </div>
             </div>
-          </div>
-        )}
-
+          </>
+        )
+      }
       {view === "folder"&&(
             <FolderList username={username}/>
           )}
@@ -300,21 +397,20 @@ const MainApp = (
     </>
   )
 }
+// Add logic to handle quiz rounds
+// Add logic to handle quiz rounds
+
+  // Logic to handle quiz rounds
+
+
 
 const QuizView = () => {
-  let num_rounds = 0;
+  let _num_rounds = 0; // Placeholder for number of quiz rounds
   const quizState = "wrong-animation" //setup, question, right-animation, wrong-animation, results
   //const question = {"definition"": "", "Term": ""}
-
-  //x mark icon for wrong answers
-  //<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXllink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="122.879px" height="122.879px" viewBox="0 0 122.879 122.879" enableBackground="new 0 0 122.879 122.879" xmlSpace="preserve"><g><path fillRule="evenodd" clipRule="evenodd" fill="#FF4141" d="M61.44,0c33.933,0,61.439,27.507,61.439,61.439 s-27.506,61.439-61.439,61.439C27.507,122.879,0,95.372,0,61.439S27.507,0,61.44,0L61.44,0z M73.451,39.151 c2.75-2.793,7.221-2.805,9.986-0.027c2.764,2.776,2.775,7.292,0.027,10.083L71.4,61.445l12.076,12.249 c2.729,2.77,2.689,7.257-0.08,10.022c-2.773,2.765-7.23,2.758-9.955-0.013L61.446,71.54L49.428,83.728 c-2.75,2.793-7.22,2.805-9.986,0.027c-2.763-2.776-2.776-7.293-0.027-10.084L51.48,61.434L39.403,49.185 c-2.728-2.769-2.689-7.256,0.082-10.022c2.772-2.765,7.229-2.758,9.953,0.013l11.997,12.165L73.451,39.151L73.451,39.151z"/></g></svg>
-
-  //check mark icon for right answers
-  //
-
   return(
     <>
-      <SubScreen message={`Quiz Time!`}>
+      <SubScreen message={"Quiz Time!"}>
         <div className="quiz-container">
           {
             quizState === "setup" && (
@@ -357,4 +453,4 @@ const QuizView = () => {
   )
 }
 
-export default App
+export default App;

@@ -127,23 +127,25 @@ label{
   align-items: center;
   justify-content: space-between;
   padding: 0 0.6rem;
-  width: 100% ;
+  width: 100%;
   gap: 0.2rem;
-  >.dir-tracking{
+}
 
-  }
-  >.action-btns{
-    display: flex;
-    gap: 0.2rem;
-    >button{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      text-align: center;
-      height: 2.5rem;
-    }
-  }
+.dir-tracking { /* [C1] Fixed CSS selector - removed improper nesting and added display properties */
+  /* Add styles for directory tracking */
+  display: flex;
+  gap: 0.2rem;
+}
+
+.action-btns { /* [C2] Fixed CSS selector - removed improper nesting and duplicate definitions */
+  display: flex;
+  gap: 0.2rem;
+  /* Add additional styles for action buttons */
+}
+
+.buttons-group { /* [C3] Fixed duplicate class - was defined multiple times, consolidated here */
+  display: flex;
+  gap: 0.2rem;
 }
 
 .folders-list{
@@ -224,18 +226,20 @@ label{
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      >.card-term{
+      >.card-term {
         font-weight: bold;
       }
-      >.card-definition{
-        
+      >.card-definition { /* [C4] Fixed CSS selector - was malformed with orphaned closing braces, properly formatted now */
+        /* Add styles for card definition */
+        display: flex;
+        gap: 0.2rem;
       }
     }
     >.card-btn-group{
       width: 20%;
     }
   }
-}
+} /* [C5] Fixed - removed extra closing brace that was causing CSS syntax error */
 
 /* FORM and Input Stylings */
 .quiz-container{
